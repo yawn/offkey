@@ -1,45 +1,49 @@
 package main
 
 import (
+	"flag"
+	"fmt"
 	"io/ioutil"
 	"os"
-	"os/signal"
-	"syscall"
 	"time"
 
-	"github.com/yawn/offkey/log"
+	"github.com/pkg/browser"
 	"github.com/yawn/offkey/server"
 )
 
-func main() {
+var fDescription string
 
-	server.Log = log.New()
+func init() {
+
+	flag.StringVar(&fDescription, "d", "", "a description of your secret")
+
+	flag.Parse()
+
+}
+
+func main() {
 
 	secret, err := ioutil.ReadAll(os.Stdin)
 
 	if err != nil {
-		server.Log.Err("failed to read secret from stdin: %s", err.Error())
+		fmt.Println(err)
+		os.Exit(1)
 	}
 
-	s, err := server.New(secret)
+	s, err := server.New(secret, fDescription)
 
 	if err != nil {
-		server.Log.Err("failed to server secret: %s", err.Error())
+		fmt.Println(err)
+		os.Exit(1)
+	}
+
+	if err := browser.OpenURL(s.URL()); err != nil {
+		fmt.Printf("Open %q in your browser\n", s.URL())
 	}
 
 	time.AfterFunc(5*time.Minute, func() {
 		s.Close()
 	})
-
-	sig := make(chan os.Signal)
-	signal.Notify(sig, os.Interrupt, syscall.SIGTERM)
-
-	go func(sig chan os.Signal) {
-
-		<-sig
-		s.Close()
-
-	}(sig)
 
 	s.Serve()
 

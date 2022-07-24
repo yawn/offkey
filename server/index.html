@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html></html>
   <head>
-    <title>Desc / secret</title>
+    <title>{{ .Description }}</title>
   </head>
   <style>
 	html, body {
@@ -9,13 +9,28 @@
 		padding: 0;
 		font-family: monospace;
 	}
+	.print {
+		display: none;
+	}
+	@media print {
+		.noprint {
+			display: none;
+		}
+		.print {
+			display: contents;
+		}
+	}
   </style>
   <body>
 	<div style="display: flex; align-items: center; width:100%; height:100vh">
 		<div style="display: block; margin: auto;">
-			<div>This QR code contains an <em>age</em> encrypted (https://github.com/FiloSottile/age) secret</div>
+			<div>This QR code contains an <em>age</em> encrypted (https://github.com/FiloSottile/age) secret.</div>
 			<div>{{ .Code }}</div>
-			<div>It is encrypted with a passphrase of ten, dash separated, lower-case words. Write them down below and enter them as-is when decrypting.</div>
+			<div class="print">This is passphrase to decrypt the age secret - it consists out of ten, dash separated, lower-case words.</div>
+			<div class="noprint">
+				This is passphrase to decrypt the age secret - write it down manually on the printout.
+				<blockquote>{{ .Passphrase }}</blockquote>
+			</div>
 		</div>
 	</div>
   </body>
