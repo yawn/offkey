@@ -11,17 +11,17 @@ import (
 	"github.com/yawn/offkey/server"
 )
 
-var fDescription string
+var (
+	fDescription string
+	fOpen        bool
+)
 
-func init() {
+func main() {
 
+	flag.BoolVar(&fOpen, "o", true, "try to open URL in browser automatically")
 	flag.StringVar(&fDescription, "d", "", "a description of your secret")
 
 	flag.Parse()
-
-}
-
-func main() {
 
 	secret, err := ioutil.ReadAll(os.Stdin)
 
@@ -37,7 +37,14 @@ func main() {
 		os.Exit(1)
 	}
 
-	if err := browser.OpenURL(s.URL()); err != nil {
+	if fOpen {
+
+		if err := browser.OpenURL(s.URL()); err != nil {
+			fmt.Println(err)
+			os.Exit(1)
+		}
+
+	} else {
 		fmt.Printf("Open %q in your browser\n", s.URL())
 	}
 

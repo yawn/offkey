@@ -26,10 +26,10 @@
 		<div style="display: block; margin: auto;">
 			<div>This QR code contains an <em>age</em> encrypted (https://github.com/FiloSottile/age) secret.</div>
 			<div>{{ .Code }}</div>
-			<div class="print">This is passphrase to decrypt the age secret - it consists out of ten, dash separated, lower-case words.</div>
+			<div id="passphrase-hint" class="print">This is passphrase to decrypt the age secret - it consists out of ten, dash separated, lower-case words.</div>
 			<div class="noprint">
 				This is passphrase to decrypt the age secret - write it down manually on the printout.
-				<blockquote>{{ .Passphrase }}</blockquote>
+				<blockquote id="passphrase">{{ .Passphrase }}</blockquote>
 			</div>
 		</div>
 	</div>

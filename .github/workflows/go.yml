@@ -21,5 +21,11 @@ jobs:
     - name: Build
       run: go build -v ./...
 
+    - name: Setup integration testing environment
+      run: |
+        sudo apt-get -y install expect zbar-tools
+        go run github.com/playwright-community/playwright-go/cmd/playwright install --with-deps
+        go install filippo.io/age/cmd/...@latest
+
     - name: Test
       run: go test -v ./...
