@@ -2,6 +2,7 @@ package crypto
 
 import (
 	"bytes"
+	"fmt"
 
 	"filippo.io/age"
 	"filippo.io/age/armor"
@@ -10,8 +11,16 @@ import (
 	"github.com/pkg/errors"
 )
 
+const (
+	eTooLarge = "secret too large - %d exceed maximum size of 1489"
+)
+
 // Encrypt encrypts a secret into a barcode, using age armor as payload
 func Encrypt(pass string, secret []byte) (barcode.Barcode, error) {
+
+	if l := len(secret); l > 1489 {
+		return nil, fmt.Errorf(eTooLarge, l)
+	}
 
 	rec, err := age.NewScryptRecipient(pass)
 

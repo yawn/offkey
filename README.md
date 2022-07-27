@@ -2,7 +2,7 @@
 
 [![Go](https://github.com/yawn/offkey/actions/workflows/go.yml/badge.svg)](https://github.com/yawn/offkey/actions/workflows/go.yml)
 
-`offkey` provides a workflow to render small sized secrets (e.g. secret keys) as encrypted QR codes, suitable for printing, subsequent long term storage and recovery using standard hardware (e.g. mobile phones).
+`offkey` provides a workflow to render small sized secrets (e.g. secret keys) as encrypted QR codes, suitable for printing, subsequent long term storage and recovery using standard hardware (e.g. mobile phones). Currently the maximum number of bytes for a secret is `1489`.
 
 The encryption part of `offkey` is handled through [age](https://github.com/FiloSottile/age) encryption and encoding.
 
