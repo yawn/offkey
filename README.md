@@ -6,6 +6,8 @@
 
 The encryption part of `offkey` is handled through [age](https://github.com/FiloSottile/age) encryption and encoding.
 
+`offkey` is inspired by the ideas of [Paperkey](https://wiki.archlinux.org/title/Paperkey).
+
 ## Usage
 
 `offkey` reads secrets from `stdin` and opens the standard browser. The URL in this browser renders the encrypted and QR encoded secret. Afterwards (or after 5m have passed) `offkey` exits.
