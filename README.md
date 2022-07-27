@@ -1,4 +1,4 @@
-# Offline keys management by printing QR codes (`offkey`)
+# Print age encrypted small secrets for offline recovery (`offkey`)
 
 [![Go](https://github.com/yawn/offkey/actions/workflows/go.yml/badge.svg)](https://github.com/yawn/offkey/actions/workflows/go.yml)
 
