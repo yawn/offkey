@@ -2,10 +2,10 @@ package server
 
 import (
 	"bytes"
+	"context"
 	_ "embed"
 	"fmt"
 	"html/template"
-	"io"
 	"net"
 	"net/http"
 
@@ -20,12 +20,13 @@ import (
 var indexHtml string
 
 type Server struct {
+	cancel      func()
 	description string
-	closer      io.Closer
 	listener    net.Listener
 	passphrase  string
 	port        int
 	secret      barcode.Barcode
+	server      *http.Server
 	token       string
 	tpl         *template.Template
 }
@@ -69,17 +70,13 @@ func New(secret []byte, description string) (*Server, error) {
 
 }
 
-func (s *Server) Close() error {
-
-	if s.closer == nil {
-		return fmt.Errorf("server not yet started")
-	} else {
-		return s.closer.Close()
-	}
-
+func (s *Server) Close() {
+	s.cancel()
 }
 
-func (s *Server) Serve() error {
+func (s *Server) Serve(ctx context.Context) error {
+
+	ctx, cancel := context.WithCancel(ctx)
 
 	mux := http.NewServeMux()
 
@@ -90,7 +87,12 @@ func (s *Server) Serve() error {
 		Handler: mux,
 	}
 
-	s.closer = srv
+	s.cancel = cancel
+
+	go func() {
+		<-ctx.Done()
+		srv.Shutdown(ctx)
+	}()
 
 	if err := srv.Serve(s.listener); err != http.ErrServerClosed {
 		return err
@@ -117,6 +119,8 @@ func (s *Server) show(res http.ResponseWriter, req *http.Request) {
 	if token == "" || token != s.token {
 		res.WriteHeader(http.StatusForbidden)
 	} else {
+
+		defer s.Close()
 
 		buf := bytes.NewBuffer(nil)
 		enc := svg.New(buf)

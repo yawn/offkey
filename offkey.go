@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"flag"
 	"fmt"
 	"io/ioutil"
@@ -48,10 +49,8 @@ func main() {
 		fmt.Printf("Open %q in your browser\n", s.URL())
 	}
 
-	time.AfterFunc(5*time.Minute, func() {
-		s.Close()
-	})
+	ctx, _ := context.WithTimeout(context.Background(), 5*time.Minute)
 
-	s.Serve()
+	s.Serve(ctx)
 
 }
