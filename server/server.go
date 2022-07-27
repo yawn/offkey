@@ -19,6 +19,7 @@ import (
 //go:embed index.html
 var indexHtml string
 
+// Server is a http server on the local loopback device that shows it's secret once
 type Server struct {
 	cancel      func()
 	description string
@@ -31,6 +32,7 @@ type Server struct {
 	tpl         *template.Template
 }
 
+// New initializes the server over a given secret and optional description
 func New(secret []byte, description string) (*Server, error) {
 
 	var (
@@ -70,10 +72,12 @@ func New(secret []byte, description string) (*Server, error) {
 
 }
 
+// Close closes the server
 func (s *Server) Close() {
 	s.cancel()
 }
 
+// Serve starts serving the secret - it blocks until the context is cancelled
 func (s *Server) Serve(ctx context.Context) error {
 
 	ctx, cancel := context.WithCancel(ctx)
@@ -102,16 +106,20 @@ func (s *Server) Serve(ctx context.Context) error {
 
 }
 
+// URL return the url under which the secret will be available
 func (s *Server) URL() string {
 	return fmt.Sprintf("http://127.0.0.1:%d?token=%s", s.port, s.token)
 }
 
+// ignore is a generic 404 handler
 func (s *Server) ignore(res http.ResponseWriter, req *http.Request) {
 	http.NotFound(res, req)
 }
 
+// show is the handler that shows the secret once - provided the correct token is passed
 func (s *Server) show(res http.ResponseWriter, req *http.Request) {
 
+	// never store the secret in any caches
 	res.Header().Set("Cache-Control", "no-store")
 
 	token := req.URL.Query().Get("token")
@@ -120,6 +128,7 @@ func (s *Server) show(res http.ResponseWriter, req *http.Request) {
 		res.WriteHeader(http.StatusForbidden)
 	} else {
 
+		// close the server after this
 		defer s.Close()
 
 		buf := bytes.NewBuffer(nil)

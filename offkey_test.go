@@ -6,6 +6,7 @@ import (
 	"io"
 	"io/ioutil"
 	"log"
+	"os"
 	"os/exec"
 	"regexp"
 	"strings"
@@ -21,6 +22,8 @@ func TestE2E(t *testing.T) {
 
 	assert := assert.New(t)
 	require := require.New(t)
+
+	os.MkdirAll(".test", os.ModePerm)
 
 	// encrypt with offkey
 
@@ -100,6 +103,12 @@ func TestE2E(t *testing.T) {
 	assert.NoError(err)
 	assert.True(pp.IsHidden())
 
+	code, err := page.Screenshot()
+	require.NoError(err)
+
+	err = ioutil.WriteFile(".test/secret-with-passphrase.png", code, os.ModePerm)
+	require.NoError(err)
+
 	// print the document, search for the passphrase and extract the hint
 
 	page.EmulateMedia(playwright.PageEmulateMediaOptions{
@@ -116,16 +125,16 @@ func TestE2E(t *testing.T) {
 
 	// extract qr code
 
-	code, err := page.Screenshot()
+	code, err = page.Screenshot()
 	require.NoError(err)
 
-	err = ioutil.WriteFile("secret.png", code, 0666)
+	err = ioutil.WriteFile(".test/secret-for-printing.png", code, os.ModePerm)
 	require.NoError(err)
 
 	err = exec.Command(
 		"sh",
 		"-c",
-		"zbarimg --raw -q secret.png > secret.age",
+		"zbarimg --raw -q .test/secret-for-printing.png > .test/secret.age",
 	).Run()
 
 	require.NoError(err)
@@ -135,7 +144,7 @@ func TestE2E(t *testing.T) {
 	out, err := exec.Command(
 		"sh",
 		"-c",
-		fmt.Sprintf(`expect -c 'spawn age --decrypt secret.age; expect -- "Enter passphrase:*"; send -- "%s\n"; expect eof'`, passphrase),
+		fmt.Sprintf(`expect -c 'spawn age --decrypt .test/secret.age; expect -- "Enter passphrase:*"; send -- "%s\n"; expect eof'`, passphrase),
 	).CombinedOutput()
 	assert.NoError(err)
 

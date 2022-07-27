@@ -8,6 +8,7 @@ import (
 	"strings"
 )
 
+// Passphrase generates a human readable passphrase that is eventually used to encrypt the secret with age
 func Passphrase() string {
 
 	var words []string
@@ -20,6 +21,7 @@ func Passphrase() string {
 
 }
 
+// Token generates a nonce that is used to temporary protect the server from other processes that might trigger the serving of the secret
 func Token() string {
 
 	const length = 16
@@ -36,6 +38,7 @@ func Token() string {
 
 }
 
+// randomWord (and it's wordlist) a verbatim copies of the matching age implementation at https://github.com/FiloSottile/age/blob/36ae5671cfbb88c591c87a900b2c9a12999ea3b7/cmd/age/wordlist.go#L15
 func randomWord() string {
 
 	buf := make([]byte, 2)
