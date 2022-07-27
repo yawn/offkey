@@ -6,6 +6,15 @@
 
 The encryption part of `offkey` is handled through [age](https://github.com/FiloSottile/age) encryption and encoding.
 
+## Usage
+
+`offkey` reads secrets from `stdin` and opens the standard browser. The URL in this browser renders the encrypted and QR encoded secret. Afterwards (or after 5m have passed) `offkey` exits.
+
+The following (optional) flags can be passed:
+
+- `-d=Description`: a description of the secret that is rendered as HTML title
+- `-o=false`: do not open the URL in a standard browser - instead the URL is printed out like this: `Open "http://127.0.0.1:53550?token=yPEO6bpL4ufjiyRZRtyWcQ" in your browser`
+
 ## Creating a secret
 
 `echo "this is my very secret message from 1658944996" | offkey`
