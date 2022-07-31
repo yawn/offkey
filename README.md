@@ -17,7 +17,7 @@ The following (optional) flags can be passed:
 - `-d=Description`: a description of the secret that is rendered as HTML title
 - `-o=false`: do not open the URL in a standard browser - instead the URL is printed out like this: `Open "http://127.0.0.1:53550?token=yPEO6bpL4ufjiyRZRtyWcQ" in your browser`
 
-## Creating a secret
+### Creating a secret
 
 `echo "this is my very secret message from 1658944996" | offkey`
 
@@ -35,7 +35,7 @@ When printing this secret, CSS hides the passphrase and instead replaces it with
 
 After printing, the passphrase needs to be written (with a permanent pen) on the printout. `offkey` exits automatically after serving the secret (or after 5 minutes when not serving the secret).
 
-## Recovering a secret
+### Recovering a secret
 
 There are various options for QR code scanning, e.g. using  using [zbar](https://formulae.brew.sh/formula/zbar) to extract the QR code content from a file, perhaps taken by [imagesnap](https://formulae.brew.sh/formula/imagesnap) (both on Mac).
 
@@ -62,3 +62,7 @@ age --decrypt secret.age
 Enter passphrase: 
 this is my very secret message from 1658944996
 ```
+
+## Contributions
+
+Contributions are welcome! Inspired by [kivikakk](https://github.com/kivikakk) / Peter Hintjens I am trying to apply [Optimistic Merging](http://hintjens.com/blog:106).
