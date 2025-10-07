@@ -173,6 +173,10 @@ func TestE2E(t *testing.T) {
 
 	}
 
+	// Strip ANSI escape sequences (age emits cursor control codes to clean up prompts)
+	ansiEscape := regexp.MustCompile(`\x1b\[[0-9;]*[a-zA-Z]`)
+	last = ansiEscape.ReplaceAllString(last, "")
+
 	assert.Equal(secret, last)
 
 	log.Printf("decrypted secret %q", last)
