@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"log"
 	"os"
 	"os/exec"
@@ -106,7 +105,7 @@ func TestE2E(t *testing.T) {
 	code, err := page.Screenshot()
 	require.NoError(err)
 
-	err = ioutil.WriteFile(".test/secret-with-passphrase.png", code, os.ModePerm)
+	err = os.WriteFile(".test/secret-with-passphrase.png", code, os.ModePerm)
 	require.NoError(err)
 
 	// print the document, search for the passphrase and extract the hint
@@ -128,7 +127,7 @@ func TestE2E(t *testing.T) {
 	code, err = page.Screenshot()
 	require.NoError(err)
 
-	err = ioutil.WriteFile(".test/secret-for-printing.png", code, os.ModePerm)
+	err = os.WriteFile(".test/secret-for-printing.png", code, os.ModePerm)
 	require.NoError(err)
 
 	err = exec.Command(

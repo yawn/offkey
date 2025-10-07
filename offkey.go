@@ -4,7 +4,7 @@ import (
 	"context"
 	"flag"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"os"
 	"runtime/debug"
 	"time"
@@ -62,7 +62,7 @@ func main() {
 
 	}
 
-	secret, err := ioutil.ReadAll(os.Stdin)
+	secret, err := io.ReadAll(os.Stdin)
 
 	if err != nil {
 		fmt.Println(err)
