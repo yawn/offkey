@@ -1,6 +1,6 @@
 module github.com/yawn/offkey
 
-go 1.25.1
+go 1.25
 
 require (
 	filippo.io/age v1.2.1
